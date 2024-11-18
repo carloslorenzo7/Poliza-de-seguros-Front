@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react"
+//import { useEffect, useState } from "react"
 
-const PolicyDetail= () =>{
-    const[policy, setPolicy]= useState(null);
-    const [loading,setLoading]=useState(null);
+// const PolicyDetail= () =>{
+//     const[policy, setPolicy]= useState(null);
+//     const [loading,setLoading]=useState(null);
 
-    useEffect(()=>{
-        const axiosPolicyDetail = async () =>{
-            try {
-                const response= await axios.get("")
-            } catch (error) {
+//     useEffect(()=>{
+//         const axiosPolicyDetail = async () =>{
+//             try {
+//                 const response= await axios.get("")
+//             } catch (error) {
                 
-            }
-        }
-    })
-    return(
-        <div></div>
-    )
-}
+//             }
+//         }
+//     })
+//     return(
+//         <div></div>
+//     )
+// }
