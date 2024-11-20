@@ -37,7 +37,7 @@ const Login = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-800">
       <div className="absolute top-20 w-full text-center">
-        <span className="text-5xl font-extrabold text-white">SegureAI</span>
+        <span className="text-5xl font-extrabold text-white">SegurAI</span>
       </div>
 
       <div className="w-full max-w-md p-8 rounded-md text-black bg-white shadow-lg">
