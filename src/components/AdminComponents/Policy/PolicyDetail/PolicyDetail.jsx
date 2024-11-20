@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoArrowBackSharp } from "react-icons/io5";
 
 const PolicyDetail = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   const [cliente, setCliente] = useState(null);

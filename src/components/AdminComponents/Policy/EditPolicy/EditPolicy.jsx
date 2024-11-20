@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaCheck, FaTimes } from 'react-icons/fa'
 
@@ -47,7 +47,7 @@ const EditPolicyForm = ({ policyId, onCancel }) => {
           setTipoDeSeguro("");
         }
 
-        // Establecer valores generales de la póliza
+        // Establece valores generales de la póliza
         Object.keys(policyData).forEach((key) => {
           if (key !== "tipoDeSeguro") setValue(key, policyData[key]);
         });
@@ -94,8 +94,8 @@ const EditPolicyForm = ({ policyId, onCancel }) => {
       };
 
       await axios.put(`http://localhost:8080/api/polizas/${policyId}`, putData);
-      console.log("Póliza actualizada");
       toast.success("Póliza actualizada exitosamente");
+      console.log("Póliza actualizada");
 
       onCancel();
     } catch (error) {
@@ -106,7 +106,6 @@ const EditPolicyForm = ({ policyId, onCancel }) => {
 
   return (
     <div>
-      <ToastContainer position="top-right" autoClose={3000} />
       <form onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label className=" text-gray-700 font-medium mb-2 inline-flex items-center ">

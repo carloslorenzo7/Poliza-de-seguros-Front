@@ -7,6 +7,9 @@ import Login from './views/Login/Login'
 import PolicyForm from './components/AdminComponents/Policy/PolicyForm/PolicyForm';
 import NavBar from './components/NavBar/NavBar';
 import PolicyDetail from './components/AdminComponents/Policy/PolicyDetail/PolicyDetail';
+import ClientList from './components/AdminComponents/Client/ClientList/ClientList';
+import CreateUser from './components/AdminComponents/Client/CreateUser/CreateUser';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const userRole=localStorage.getItem("userRole");
@@ -15,6 +18,7 @@ function App() {
 
 
     <div className="bg-gray-200 min-h-screen">
+        <ToastContainer position="top-right" autoClose={3000} />
       {location.pathname !== "/" && <NavBar />}
      <Routes>
        <Route path= '/' element ={<Login/>}/>
@@ -30,13 +34,15 @@ function App() {
           )
         }
       />
-
+          
       <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
       <Route path='/admin-dashboard/createPolicy' element= {<PolicyForm/>}/>
       <Route path='/admin-dashboard-detail/:id' element={<PolicyDetail/>}/>
+      <Route path='/admin-dashboard/clients' element={<ClientList/>}/>
 
+      
       <Route path='/client-dashboard' element= {<ClientDashboard/>}/>
-
+        <Route path= '/client-dashboard' element={<CreateUser/>}/>
      </Routes>
     </div>
   )

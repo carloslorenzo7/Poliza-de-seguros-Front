@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import CreateUser from "../../components/AdminComponents/Client/CreateUser/CreateUser";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -60,10 +62,21 @@ const Login = () => {
             type="submit"
             className="bg-blue-500 w-full py-3 rounded text-white text-lg font-semibold hover:bg-blue-700 transition-all duration-200"
           >
-           Ingresar
+            Ingresar
           </button>
         </form>
+        <div className="text-center mt-4">
+          <span
+            className="text-blue-600 cursor-pointer"
+            onClick={() => setShowModal(true)}
+          >
+            ¿Aún no tienes una cuenta? Regístrate
+          </span>
+        </div>
       </div>
+
+     
+      {showModal && <CreateUser closeModal={() => setShowModal(false)} />}
     </div>
   );
 };
