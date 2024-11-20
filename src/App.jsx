@@ -1,15 +1,21 @@
 
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes ,useLocation } from 'react-router-dom';
 import './App.css'
 import AdminDashboard from './views/AdminDashboard/AdminDashboard';
 import ClientDashboard from './views/ClientDashboard/ClientDashboard';
 import Login from './views/Login/Login'
+import PolicyForm from './components/AdminComponents/Policy/PolicyForm/PolicyForm';
+import NavBar from './components/NavBar/NavBar';
+import PolicyDetail from './components/AdminComponents/Policy/PolicyDetail/PolicyDetail';
 
 function App() {
   const userRole=localStorage.getItem("userRole");
-
+  const location = useLocation();
   return (
-    <>
+
+
+    <div className="bg-gray-200 min-h-screen">
+      {location.pathname !== "/" && <NavBar />}
      <Routes>
        <Route path= '/' element ={<Login/>}/>
      <Route
@@ -24,11 +30,15 @@ function App() {
           )
         }
       />
+
       <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
+      <Route path='/admin-dashboard/createPolicy' element= {<PolicyForm/>}/>
+      <Route path='/admin-dashboard-detail/:id' element={<PolicyDetail/>}/>
+
       <Route path='/client-dashboard' element= {<ClientDashboard/>}/>
 
      </Routes>
-    </>
+    </div>
   )
 }
 
