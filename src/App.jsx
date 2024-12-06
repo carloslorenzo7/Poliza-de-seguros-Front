@@ -10,6 +10,7 @@ import PolicyDetail from './components/AdminComponents/Policy/PolicyDetail/Polic
 import ClientList from './components/AdminComponents/Client/ClientList/ClientList';
 import CreateUser from './components/AdminComponents/Client/CreateUser/CreateUser';
 import { ToastContainer } from 'react-toastify';
+import ClientDetail from './components/AdminComponents/Client/ClientDetail/ClientDetail';
 
 function App() {
   const userRole=localStorage.getItem("userRole");
@@ -39,10 +40,13 @@ function App() {
       <Route path='/admin-dashboard/createPolicy' element= {<PolicyForm/>}/>
       <Route path='/admin-dashboard-detail/:id' element={<PolicyDetail/>}/>
       <Route path='/admin-dashboard/clients' element={<ClientList/>}/>
+        <Route path='/admin-dashboard/client-detail/:id' element ={<ClientDetail/>}/>
+      
 
       
       <Route path='/client-dashboard' element= {<ClientDashboard/>}/>
-        <Route path= '/client-dashboard' element={<CreateUser/>}/>
+        <Route path= '/client-dashboard/createClient' element={<CreateUser/>}/>
+       
      </Routes>
     </div>
   )

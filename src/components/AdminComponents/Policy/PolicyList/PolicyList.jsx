@@ -16,21 +16,29 @@ const PolicyList = () => {
   const [loading, setLoading] = useState(true);
   const [selectedPolicyId, setSelectedPolicyId] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  console.log("usuario seleccionado:",selectedUserId)
+  
+  const axiosUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/usuario/todos");
+      console.log(response.data);
+      setUsers(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error al obtener los usuarios:", error);
+      setLoading(false);
+    }
+  };
+  //axiosUsers();
+
+
 
   useEffect(() => {
-    const axiosUsers = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/usuario/todos");
-        console.log(response.data);
-        setUsers(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-        setLoading(false);
-      }
-    };
-    axiosUsers();
+    axiosUsers()
   }, []);
+
+
+  
 
   const handleDelete = async (id) => {
    
@@ -45,8 +53,8 @@ const PolicyList = () => {
         toast.success("Póliza eliminada con éxito");
         console.log("Póliza eliminada exitosamente");
       } catch (error) {
-        console.error(error.message);
         toast.error("Error al eliminar póliza");
+        console.error(error.message);
       }
     
   };
@@ -57,11 +65,14 @@ const PolicyList = () => {
 
   const handleAssignPolicy = (id) => {
     setSelectedUserId(id);
+    
+    
   };
 
   const handleCloseEdit = () => {
     setSelectedPolicyId(null);
     setSelectedUserId(null);
+    axiosUsers()
   };
 
   
@@ -77,7 +88,7 @@ const PolicyList = () => {
           <EditPolicyForm policyId={selectedPolicyId} onCancel={handleCloseEdit} />
         )}
         {selectedUserId && (
-          <PolicyForm userId={selectedUserId} onCancel={handleCloseEdit} />
+          <PolicyForm userId={selectedUserId} isModal={true} onCancel={handleCloseEdit} />
         )}
       </Modal>
       {users.length > 0 ? (

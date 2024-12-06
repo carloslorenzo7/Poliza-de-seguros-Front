@@ -1,24 +1,32 @@
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-//import { useState } from "react";
 import { FaUser, FaCalendarAlt, FaDollarSign } from "react-icons/fa";
 import { MdNumbers } from "react-icons/md";
 import { AiFillSecurityScan } from "react-icons/ai";
 import { IoArrowBackSharp } from "react-icons/io5";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
+import PropTypes from "prop-types";
 
-const PolicyForm = () => {
+const PolicyForm = ({ userId, isModal, onCancel }) => {
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm();
 
   // va a observar el cambio en el tipo de seguro
   const tipoDeSeguroSeleccionado = watch("tipoDeSeguro");
+
+  useEffect(() => {
+    if (userId) {
+      setValue("usuarioId", userId); //  para rellenar el campo de id de usuario
+    }
+  }, [userId, setValue]);
 
   const onSubmit = async (data) => {
     try {
@@ -35,22 +43,29 @@ const PolicyForm = () => {
       console.log("Datos enviados:", datosConvertidos);
       console.log("Poliza creada correctamente", response.data);
       toast.success("Póliza creada con éxito");
-      navigate("/admin-dashboard");
+      // logica para que se cierre el modal o redirija a la pagina de lsitas si es form
+      if (isModal) {
+        onCancel();
+      } else {
+        navigate("/admin-dashboard");
+      }
     } catch (error) {
-      toast.error("Póliza eliminada con éxito");
+      toast.error("Error al crear poliza");
       console.error("Error al crear la póliza:", error);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-10 bg-gray p-8 shadow-md rounded-lg bg-white">
-      <ToastContainer position="top-right" autoClose={3000} />
-      <button
-        onClick={() => navigate("/admin-dashboard")}
-        className="absolute top-16 left-20  flex items-center gap-2 text-blue-700 font-semibold hover:text-white hover:bg-blue-500 px-3 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
-      >
-        <IoArrowBackSharp size={25} />
-      </button>
+     
+      {!isModal && (
+        <button
+          onClick={() => navigate("/admin-dashboard")}
+          className="absolute top-20 left-24 flex items-center gap-2 text-blue-700 font-semibold hover:text-white hover:bg-blue-500 px-3 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          <IoArrowBackSharp size={25} />
+        </button>
+      )}
 
       <h2 className="text-2xl text-center mt-2 mb-4 font-semibold">
         Crear Poliza
@@ -95,7 +110,9 @@ const PolicyForm = () => {
             className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
           {errors.numeroDePoliza && (
-            <span className="text-red-600">{errors.numeroDePoliza.message}</span>
+            <span className="text-red-600">
+              {errors.numeroDePoliza.message}
+            </span>
           )}
         </div>
 
@@ -114,7 +131,9 @@ const PolicyForm = () => {
             })}
             className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
-          {errors.fechaDeInicio && <span className="text-red-600">{errors.fechaDeInicio.message}</span>}
+          {errors.fechaDeInicio && (
+            <span className="text-red-600">{errors.fechaDeInicio.message}</span>
+          )}
         </div>
 
         <div>
@@ -134,7 +153,9 @@ const PolicyForm = () => {
             className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
           {errors.fechaDeVencimiento && (
-            <span className="text-red-600">{errors.fechaDeVencimiento.message}</span>
+            <span className="text-red-600">
+              {errors.fechaDeVencimiento.message}
+            </span>
           )}
         </div>
 
@@ -154,7 +175,9 @@ const PolicyForm = () => {
             className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           />
           {errors.montoAsegurado && (
-            <span className="text-red-600">{errors.montoAsegurado.message}</span>
+            <span className="text-red-600">
+              {errors.montoAsegurado.message}
+            </span>
           )}
         </div>
 
@@ -172,7 +195,6 @@ const PolicyForm = () => {
             {...register("tipoDeSeguro", {
               required: "El tipo de seguro es obligatorio",
             })}
-            
             className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           >
             <option
@@ -200,7 +222,9 @@ const PolicyForm = () => {
               Seguro de inmueble
             </option>
           </select>
-          {errors.tipoDeSeguro && <span className="text-red-600">{errors.tipoDeSeguro.message}</span>}
+          {errors.tipoDeSeguro && (
+            <span className="text-red-600">{errors.tipoDeSeguro.message}</span>
+          )}
         </div>
 
         {/*condicionales dependiendo del tipo de seguro */}
@@ -222,7 +246,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.descripcionAuto && (
-                <span className="text-red-600">{errors.descripcionAuto.message}</span>
+                <span className="text-red-600">
+                  {errors.descripcionAuto.message}
+                </span>
               )}
             </div>
 
@@ -241,7 +267,9 @@ const PolicyForm = () => {
                 })}
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.marcaAuto && <span className="text-red-600">{errors.marcaAuto.message}</span>}
+              {errors.marcaAuto && (
+                <span className="text-red-600">{errors.marcaAuto.message}</span>
+              )}
             </div>
 
             <div>
@@ -259,7 +287,11 @@ const PolicyForm = () => {
                 })}
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.modeloAuto && <span className="text-red-600">{errors.modeloAuto.message}</span>}
+              {errors.modeloAuto && (
+                <span className="text-red-600">
+                  {errors.modeloAuto.message}
+                </span>
+              )}
             </div>
 
             <div>
@@ -277,7 +309,11 @@ const PolicyForm = () => {
                 })}
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
-              {errors.patenteAuto && <span className="text-red-600">{errors.patenteAuto.message}</span>}
+              {errors.patenteAuto && (
+                <span className="text-red-600">
+                  {errors.patenteAuto.message}
+                </span>
+              )}
             </div>
           </>
         )}
@@ -300,7 +336,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.descripcionCelular && (
-                <span className="text-red-600">{errors.descripcionCelular.message}</span>
+                <span className="text-red-600">
+                  {errors.descripcionCelular.message}
+                </span>
               )}
             </div>
 
@@ -320,7 +358,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.marcaCelular && (
-                <span className="text-red-600">{errors.marcaCelular.message}</span>
+                <span className="text-red-600">
+                  {errors.marcaCelular.message}
+                </span>
               )}
             </div>
 
@@ -340,7 +380,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.modeloCelular && (
-                <span className="text-red-600">{errors.modeloCelular.message}</span>
+                <span className="text-red-600">
+                  {errors.modeloCelular.message}
+                </span>
               )}
             </div>
 
@@ -360,7 +402,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.numeroDeSerieCelular && (
-                <span className="text-red-600">{errors.numeroDeSerieCelular.message}</span>
+                <span className="text-red-600">
+                  {errors.numeroDeSerieCelular.message}
+                </span>
               )}
             </div>
           </>
@@ -384,7 +428,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.descripcionInmueble && (
-                <span className="text-red-600">{errors.descripcionInmueble.message}</span>
+                <span className="text-red-600">
+                  {errors.descripcionInmueble.message}
+                </span>
               )}
             </div>
 
@@ -404,7 +450,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.direccionInmueble && (
-                <span className="text-red-600">{errors.direccionInmueble.message}</span>
+                <span className="text-red-600">
+                  {errors.direccionInmueble.message}
+                </span>
               )}
             </div>
 
@@ -424,7 +472,9 @@ const PolicyForm = () => {
                 className="appearance-none block w-full px-3 py-2 border text-gray-900 border-gray-300 bg-white rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               />
               {errors.tipoDeConstruccionInmueble && (
-                <span className="text-red-600">{errors.tipoDeConstruccionInmueble.message}</span>
+                <span className="text-red-600">
+                  {errors.tipoDeConstruccionInmueble.message}
+                </span>
               )}
             </div>
           </>
@@ -439,5 +489,9 @@ const PolicyForm = () => {
     </div>
   );
 };
-
+PolicyForm.propTypes = {
+  userId: PropTypes.number,
+  isModal: PropTypes.bool,
+  onCancel: PropTypes.func,
+}; 
 export default PolicyForm;

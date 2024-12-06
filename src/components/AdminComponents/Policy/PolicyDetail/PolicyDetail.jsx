@@ -31,9 +31,9 @@ const PolicyDetail = () => {
   if (error) return <p>Error al cargar póliza: {error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10 border border-gray-300">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-16 border border-gray-300">
       <h1 className="text-3xl font-bold mb-6 text-center text-blue-600">
-        Bienvenido a tu Perfil
+        Poliza del Cliente
       </h1>
 
       {cliente ? (
@@ -190,7 +190,7 @@ const PolicyDetail = () => {
 
       <button
         onClick={() => navigate("/admin-dashboard")}
-        className="absolute top-16 left-20 flex items-center gap-2 text-blue-700 font-semibold hover:text-white hover:bg-blue-500 px-3 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+        className="absolute top-20 left-20 flex items-center gap-2 text-blue-700 font-semibold hover:text-white hover:bg-blue-500 px-3 py-2 rounded-md transition-all duration-200 ease-in-out shadow-md focus:outline-none focus:ring-2 focus:ring-blue-300"
       >
        <IoArrowBackSharp size={25}/> 
       </button>

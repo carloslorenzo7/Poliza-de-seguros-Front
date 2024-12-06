@@ -1,102 +1,156 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CreateUser = ({ closeModal }) => {
-  const [nombre, setNombre] = useState("");
-  const [apellido, setApellido] = useState("");
-  const [dni, setDni] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [direccion, setDireccion] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
-      const response = await axios.post("http://localhost:8080/usuario/nuevoUsuario", {
-        nombre,
-        apellido,
-        dni,
-        telefono,
-        direccion,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:8080/usuario/nuevoUsuario",
+        data
+      );
       console.log("Usuario creado:", response.data);
-      closeModal(); 
-      toast.success("Usuario creado con exito")
+      toast.success("Usuario creado con éxito");
+      if (closeModal) {
+        closeModal();
+      } else {
+        navigate("/admin-dashboard/clients");
+      }
     } catch (error) {
-        toast.error("Error al crear el usuario")
+      if (error.response && error.response.data) {
+        toast.error("Error al crear el usuario");
+      } else {
+        toast.error("Error al crear el usuario");
+      }
       console.error("Error al crear usuario:", error);
-    
     }
   };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50">
-      <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-md">
-        
+      <div className="bg-white p-8 rounded-md shadow-lg w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <h2 className="text-2xl font-bold mb-4 text-center">Crear cuenta</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {/* <div className="max h-96 overflow-y-auto"> */}
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <input
             type="text"
             placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            {...register("nombre", {
+              required: "El nombre es obligatorio",
+              minLength: {
+                value: 3,
+                message: "El nombre debe tener al menos 3 caracteres",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.nombre && (
+            <p className="text-red-600">{errors.nombre.message}</p>
+          )}
+
           <input
             type="text"
             placeholder="Apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}
+            {...register("apellido", {
+              required: "El apellido es obligatorio",
+              minLength: {
+                value: 3,
+                message: "El apellido debe tener al menos 3 caracteres",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.apellido && (
+            <p className="text-red-600">{errors.apellido.message}</p>
+          )}
+
           <input
             type="text"
             placeholder="DNI"
-            value={dni}
-            onChange={(e) => setDni(e.target.value)}
+            {...register("dni", {
+              required: "El DNI es obligatorio",
+              pattern: {
+                value: /^\d{7,8}$/,
+                message: "El DNI debe tener entre 7 y 8 dígitos",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.dni && <p className="text-red-600">{errors.dni.message}</p>}
+
           <input
             type="text"
             placeholder="Teléfono"
-            value={telefono}
-            onChange={(e) => setTelefono(e.target.value)}
+            {...register("telefono", {
+              required: "El teléfono es obligatorio",
+              pattern: {
+                value: /^\d{8,15}$/,
+                message: "El teléfono debe tener entre 8 y 15 dígitos",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.telefono && (
+            <p className="text-red-600">{errors.telefono.message}</p>
+          )}
+
           <input
             type="text"
             placeholder="Dirección"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
+            {...register("direccion", {
+              required: "La dirección es obligatoria",
+              minLength: {
+                value: 5,
+                message: "La dirección debe tener al menos 5 caracteres",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.direccion && (
+            <p className="text-red-600">{errors.direccion.message}</p>
+          )}
+
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email", {
+              required: "El email es obligatorio",
+              pattern: {
+                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                message: "El email debe contener un '@' válido",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.email && (
+            <p className="text-red-600">{errors.email.message}</p>
+          )}
+
           <input
             type="password"
             placeholder="Contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            {...register("password", {
+              required: "La contraseña es obligatoria",
+              minLength: {
+                value: 8,
+                message: "La contraseña debe tener al menos 8 caracteres",
+              },
+            })}
             className="rounded border border-gray-300 text-lg w-full p-3"
-            required
           />
+          {errors.password && (
+            <p className="text-red-600">{errors.password.message}</p>
+          )}
+
           <button
             type="submit"
             className="bg-blue-500 w-full py-3 rounded text-white text-lg font-semibold hover:bg-blue-700 transition-all duration-200"
@@ -104,6 +158,7 @@ const CreateUser = ({ closeModal }) => {
             Crear cuenta
           </button>
         </form>
+        {/* </div> */}
 
         <button
           onClick={closeModal}
@@ -117,7 +172,7 @@ const CreateUser = ({ closeModal }) => {
 };
 
 CreateUser.propTypes = {
-    closeModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default CreateUser;
